@@ -1,5 +1,7 @@
 import re
 
+ip_list = []
+
 logs_file = "gavno.log"
 """
 def simple_parser(line):
@@ -24,10 +26,26 @@ def ip_parse(line):
             pattern = r"\d+\.\d+\.\d+\.\d+"
             if re.match(pattern, ip):
                 return ip.strip()
+                
         except (ValueError, IndexError):
             return None
 
 if __name__ == "__main__":
-    with open(logs_file, 'r') as f:
+    scanned_lines = 0
+    with open(logs_file) as f:
         for line in f:
-            print(ip_parse(line.strip()))      
+            i = ip_parse(line.strip())
+            if i != None:
+                if ":" in i:
+                    i = i[:-1]
+                    ip_list.append(i)
+                else:
+                    ip_list.append(i)
+            scanned_lines += 1
+    unique_ips = set(ip_list)
+    unique_number = len(unique_ips)
+    sorted_ips = sorted(unique_ips)
+    print("Lines read: ", scanned_lines)
+    print("Unique IPs: ", unique_number)
+    print("First 10 IPs: ", sorted_ips[:10])
+
